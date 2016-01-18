@@ -1,8 +1,9 @@
 package com.mushroom.hui.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.mushroom.hui.adt.ResultCode;
 import com.mushroom.hui.adt.RetData;
-import com.mushroom.hui.adt.Status;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +32,11 @@ public class MultRpsController {
     public String resStr(HttpServletRequest request) {
         String id = request.getParameter("id");
         String ans = "The id is: " + id;
+        if (StringUtils.isBlank(id)) {
+            return this.buildResult(ResultCode.PARAMETER_ERROR, ans, "id", id);
+        }
 
-        return buildResult(1001, "SUCCESS", ans);
+        return this.buildResult(ResultCode.SUCCESS, ans);
     }
 
     /**
@@ -91,10 +95,18 @@ public class MultRpsController {
         return path;
     }
 
+    /**
+     * 构建返回的结果
+     * @param code  返回的状态
+     * @param result 正文
+     * @param msg 提示信息
+     * @return
+     */
+    private String buildResult(ResultCode code, Object result, String ...msg) {
+        RetData retData = new RetData();
+        code.mixin(retData, msg);
+        retData.setResult(result);
 
-    private String buildResult(int code, String msg, Object result) {
-        Status status = new Status(code, msg);
-        RetData retData = new RetData(status, result);
         // 利用fastJson进行序列化
         String ans = JSON.toJSONString(retData);
         return ans;

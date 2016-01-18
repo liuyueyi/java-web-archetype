@@ -13,6 +13,7 @@ public class RetData<T> implements Serializable {
     private T result;
 
     public RetData() {
+        status = new Status();
     }
 
     public RetData(Status status, T result) {
