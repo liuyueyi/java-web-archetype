@@ -19,7 +19,6 @@ public class Index {
      * @return
      */
     @RequestMapping(value = "/")
-    @ResponseBody
     public String index(HttpServletRequest request) {
         return "index";
     }
