@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
-<!-- 下面的这个扫描很重要，用于建立uri与controller指尖的映射 -->
+    <!-- 下面的这个扫描很重要，用于建立uri与controller指尖的映射 -->
     <context:component-scan base-package="com.mushroom.hui"/>
     <context:annotation-config/>
     <beans:annotation-driven/>
@@ -14,7 +14,7 @@
     <bean id="velocityConfig"
           class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
         <property name="resourceLoaderPath" value="/WEB-INF/views/"/>
-        <property name="configLocation" value="/WEB-INF/conf/velocity.properties" />
+        <property name="configLocation" value="/WEB-INF/conf/velocity.properties"/>
     </bean>
 
     <bean id="velocityViewResolver"
@@ -25,17 +25,25 @@
         <property name="layoutUrl" value="layouts/none.vm"/>
     </bean>
 
-    <!--&lt;!&ndash;支持多媒体文件上传&ndash;&gt;-->
+    <!--支持多媒体文件上传-->
     <!--<bean id="multipartResolver"-->
-          <!--class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+    <!--class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
     <!--</bean>-->
 
     <mvc:annotation-driven>
         <mvc:message-converters register-defaults="true">
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <property name="supportedMediaTypes" value = "text/plain;charset=UTF-8" />
+                <property name="supportedMediaTypes" value="text/plain;charset=UTF-8"/>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+
+    <!-- 注册拦截器，下面表示所有的Controller请求都会优先执行这个拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.mushroom.hui.interceptor.UserInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 </beans>
