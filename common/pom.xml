@@ -3,17 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.1</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.0.28.Final</version>
-            <scope>test</scope>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.4</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -28,8 +34,8 @@
         <artifactId>web-archetype</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.mushroom.hui.biz</groupId>
-    <artifactId>biz</artifactId>
+    <groupId>com.mushroom.hui.common</groupId>
+    <artifactId>common</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 

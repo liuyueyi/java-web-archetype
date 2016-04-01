@@ -13,6 +13,7 @@
     <modules>
         <module>web</module>
         <module>biz</module>
+        <module>common</module>
     </modules>
 
 </project>

@@ -1,8 +1,8 @@
 package com.mushroom.hui.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.mushroom.hui.adt.ResultCode;
-import com.mushroom.hui.adt.RetData;
+import com.mushroom.hui.common.adt.ResultCode;
+import com.mushroom.hui.common.adt.RetData;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

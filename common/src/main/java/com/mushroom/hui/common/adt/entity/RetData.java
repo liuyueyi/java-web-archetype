@@ -1,4 +1,4 @@
-package com.mushroom.hui.adt;
+package com.mushroom.hui.common.adt.entity;
 
 import java.io.Serializable;
 
@@ -11,14 +11,21 @@ public class RetData<T> implements Serializable {
 
     private Status status;
     private T result;
+    private boolean isSuccess;
 
     public RetData() {
-        status = new Status();
+        status = Status.getSuccessStatus();
+        isSuccess = true;
     }
 
-    public RetData(Status status, T result) {
-        this.status = status;
+    public RetData(T result) {
+        this();
         this.result = result;
+    }
+
+    public RetData(Status status) {
+        this.status = status;
+        this.isSuccess = false;
     }
 
     public T getResult() {
@@ -35,6 +42,14 @@ public class RetData<T> implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public boolean getIsSuccess() {
+        return isSuccess;
+    }
+
+    public void setIsSuccess(boolean isSuccess) {
+        isSuccess = isSuccess;
     }
 
     @Override
