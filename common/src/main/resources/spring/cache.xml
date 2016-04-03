@@ -15,8 +15,8 @@
 
     <bean id="cachePropertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="order" value="2" />
-        <property name="ignoreUnresolvablePlaceholders" value="true" />
+        <property name="order" value="2"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="locations">
             <list>
                 <value>classpath*:conf/cache.properties</value>
@@ -24,13 +24,19 @@
         </property>
     </bean>
 
+
+
     <bean id="cacheWrapper" class="com.mushroom.hui.common.cache.CacheWrapper">
-        <property name="masterConf" value="${cache.masterConfig}" />
-        <property name="slaveConf" value="${cache.slaveConfigs}" />
-        <property name="timeout" value="${cache.timeout}" />
-        <property name="database" value="${cache.database}" />
-        <property name="maxTotal" value="${cache.maxTotal}" />
-        <property name="maxIdle" value="${cache.maxIdle}" />
-        <property name="minIdle" value="${cache.minIdle}" />
+        <property name="cacheConf">
+            <bean class="com.mushroom.hui.common.cache.conf.CacheConf">
+                <property name="masterConf" value="${cache.masterConfig}"/>
+                <property name="slaveConf" value="${cache.slaveConfigs}"/>
+                <property name="timeout" value="${cache.timeout}"/>
+                <property name="database" value="${cache.database}"/>
+                <property name="maxTotal" value="${cache.maxTotal}"/>
+                <property name="maxIdle" value="${cache.maxIdle}"/>
+                <property name="minIdle" value="${cache.minIdle}"/>
+            </bean>
+        </property>
     </bean>
 </beans>

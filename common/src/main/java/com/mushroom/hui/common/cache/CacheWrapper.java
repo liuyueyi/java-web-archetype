@@ -1,8 +1,11 @@
 package com.mushroom.hui.common.cache;
 
 import com.alibaba.fastjson.JSON;
+import com.mushroom.hui.common.cache.conf.CacheAddress;
+import com.mushroom.hui.common.cache.conf.CacheConf;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -22,150 +25,54 @@ public class CacheWrapper implements InitializingBean {
     private JedisPool masterJedis;
     private List<JedisPool> slaveJedisList;
 
-    private String masterConf;
-    private String slaveConf;
-    private int maxIdle;
-    private int minIdle;
-    private int maxTotal;
-    private int timeout;
-    private int database;
+    // redis 配置信息
+    @Autowired
+    private CacheConf cacheConf;
 
-    public String getMasterConf() {
-        return masterConf;
+    public CacheConf getCacheConf() {
+        return cacheConf;
     }
 
-    public void setMasterConf(String masterConf) {
-        this.masterConf = masterConf;
-    }
-
-    public String getSlaveConf() {
-        return slaveConf;
-    }
-
-    public void setSlaveConf(String slaveConf) {
-        this.slaveConf = slaveConf;
-    }
-
-    public int getMaxIdle() {
-        return maxIdle;
-    }
-
-    public void setMaxIdle(int maxIdle) {
-        this.maxIdle = maxIdle;
-    }
-
-    public int getMinIdle() {
-        return minIdle;
-    }
-
-    public void setMinIdle(int minIdle) {
-        this.minIdle = minIdle;
-    }
-
-    public int getMaxTotal() {
-        return maxTotal;
-    }
-
-    public void setMaxTotal(int maxTotal) {
-        this.maxTotal = maxTotal;
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-    public int getDatabase() {
-        return database;
-    }
-
-    public void setDatabase(int database) {
-        this.database = database;
-    }
-
-    private class ConfAddress {
-        private String ip;
-        private int port;
-
-        public String getIp() {
-            return ip;
-        }
-
-        public void setIp(String ip) {
-            this.ip = ip;
-        }
-
-        public int getPort() {
-            return port;
-        }
-
-        public void setPort(int port) {
-            this.port = port;
-        }
-
-        public ConfAddress(String conf) {
-            init(conf);
-        }
-
-        private void init(String conf) {
-            if (!StringUtils.contains(conf, ":")) {
-                return;
-            }
-
-            String[] pair = StringUtils.split(conf, ":");
-            if (pair == null || pair.length != 2) {
-                return;
-            }
-
-            this.ip = pair[0];
-            this.port = Integer.parseInt(pair[1]);
-        }
-
-        public boolean isIllegal() {
-            return StringUtils.isBlank(ip) || port <= 0;
-        }
+    public void setCacheConf(CacheConf cacheConf) {
+        this.cacheConf = cacheConf;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         // 池基本配置
         JedisPoolConfig config = new JedisPoolConfig();
-        config.setMaxTotal(maxTotal <= 0 ? 300 : maxTotal);
-        config.setMaxIdle(maxIdle <= 0 ? 10 : maxIdle);
-        config.setMinIdle(minIdle <= 0 ? 3 : minIdle);
-        config.setMaxWaitMillis(timeout <= 0 ? 1000 : timeout);
+        config.setMaxTotal(cacheConf.getMaxTotal() <= 0 ? 300 : cacheConf.getMaxTotal());
+        config.setMaxIdle(cacheConf.getMaxIdle() <= 0 ? 10 : cacheConf.getMaxIdle());
+        config.setMinIdle(cacheConf.getMinIdle() <= 0 ? 3 : cacheConf.getMinIdle());
+        config.setMaxWaitMillis(cacheConf.getTimeout() <= 0 ? 1000 : cacheConf.getTimeout());
         config.setTestOnBorrow(false);
 
 
         // init master jedis
-        ConfAddress masterAddr = new ConfAddress(masterConf);
+        CacheAddress masterAddr = new CacheAddress(cacheConf.getMasterConf());
         if (masterAddr.isIllegal()) {
             throw new JedisException("master jedis conf is error!");
         }
-        masterJedis = new JedisPool(config, masterAddr.getIp(), masterAddr.getPort(), this.timeout, null, this.database);
+        masterJedis = new JedisPool(config, masterAddr.getIp(), masterAddr.getPort(), cacheConf.getTimeout(), null, cacheConf.getDatabase());
 
 
         // init slave jedis
-        String[] slaveConfs = StringUtils.split(slaveConf, ",");
+        String[] slaveConfs = StringUtils.split(cacheConf.getSlaveConf(), ",");
         if (slaveConfs == null || slaveConfs.length == 0) {
             slaveJedisList = Collections.emptyList();
         }
         slaveJedisList = new ArrayList<>(slaveConfs.length);
-        ConfAddress slaveTmpAddr;
+        CacheAddress slaveTmpAddr;
         for (String conf: slaveConfs) {
-            slaveTmpAddr = new ConfAddress(conf);
+            slaveTmpAddr = new CacheAddress(conf);
             if(slaveTmpAddr.isIllegal()) {
                 continue;
             }
             JedisPool slaveJedis = new JedisPool(config, slaveTmpAddr.getIp(), slaveTmpAddr.getPort(),
-                    this.timeout, null, this.database);
+                    cacheConf.getTimeout(), null, cacheConf.getDatabase());
             slaveJedisList.add(slaveJedis);
         }
     }
-
 
 
 
