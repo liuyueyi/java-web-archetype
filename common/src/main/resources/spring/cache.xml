@@ -26,7 +26,7 @@
 
 
 
-    <bean id="cacheWrapper" class="com.mushroom.hui.common.cache.CacheWrapper">
+    <bean id="cacheService" class="com.mushroom.hui.common.cache.impl.CacheService">
         <property name="cacheConf">
             <bean class="com.mushroom.hui.common.cache.conf.CacheConf">
                 <property name="masterConf" value="${cache.masterConfig}"/>

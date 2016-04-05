@@ -1,6 +1,8 @@
 package com.mushroom.hui.test;
 
-import com.mushroom.hui.common.cache.CacheWrapper;
+import com.mushroom.hui.common.cache.CacheClient;
+import com.mushroom.hui.common.cache.impl.CacheService;
+import com.mushroom.hui.common.register.callback.CacheCallBackInterface;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -18,12 +20,14 @@ public class CacheWrapperTest {
 
     private final static org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CacheWrapperTest.class);
 
-    private CacheWrapper cacheWrapper;
+    private CacheService cacheService;
+    private CacheClient cacheClient;
 
     @Before
     public void init() {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:spring/*.xml");
-        cacheWrapper = applicationContext.getBean("cacheWrapper", CacheWrapper.class);
+        cacheService = applicationContext.getBean("cacheService", CacheService.class);
+        cacheClient = applicationContext.getBean("cacheClient", CacheClient.class);
     }
 
     private class Point {
@@ -67,10 +71,10 @@ public class CacheWrapperTest {
         String key = "hello_001";
         String value = "woca";
 
-        boolean ans = cacheWrapper.set(key, value, 600);
+        boolean ans = cacheService.set(key, value, 600);
         logger.info("The result is: {}", ans);
 
-        Object obj = cacheWrapper.get(key);
+        Object obj = cacheService.get(key);
         logger.info("The obj is {}", obj);
 
 
@@ -87,11 +91,61 @@ public class CacheWrapperTest {
         map.put("b2", pointList2);
 
         String key2 = "world_001";
-        boolean ans2 = cacheWrapper.setObject(key2, map, 600);
+        boolean ans2 = cacheService.setObject(key2, map, 600);
         logger.info("The ans2 is  {}", ans2);
-        Object result = cacheWrapper.getObject(key2, map.getClass());
+        Object result = cacheService.getObject(key2, map.getClass());
         logger.info("Thre result2 is {}", result);
     }
 
+
+    @Test
+    public void keySubTest() throws InterruptedException {
+        for (int i = 0; i < 1; i++) {
+            TestThread thread= new TestThread(cacheService);
+            thread.start();
+        }
+        Thread.sleep(50000L);
+    }
+
+
+    @Test
+    public void testCacheClient() throws Exception {
+        int id = 1002;
+        String name = "cache_test";
+
+        // 注册回调函数
+        cacheClient.register(name, new CacheCallBackInterface(){
+
+            @Override
+            public String getKey(int id) {
+                return "test_" + id;
+            }
+
+            @Override
+            public int getExpire() {
+                return 30;
+            }
+
+            @Override
+            public Object getObject(String key) {
+                return key.length();
+            }
+        });
+
+        Integer count = cacheClient.getObject(name, id ,Integer.class);
+        logger.info("The count is : {}", count);
+
+
+        cacheService.setObject("test_" + id, 1231234, 30);
+
+
+        count = cacheClient.getObject(name, id, Integer.class);
+        logger.info("The count is : {}", count);
+
+
+        Thread.sleep(1000);
+        count = cacheClient.getObject(name, id, Integer.class);
+        logger.info("The count is : {}", count);
+    }
 
 }

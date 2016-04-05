@@ -1,4 +1,4 @@
-package com.mushroom.hui.common.cache;
+package com.mushroom.hui.common.cache.exception;
 
 /**
  * Created by yihui on 16/4/1.

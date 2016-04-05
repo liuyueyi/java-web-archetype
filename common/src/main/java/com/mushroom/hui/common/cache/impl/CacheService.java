@@ -1,8 +1,10 @@
-package com.mushroom.hui.common.cache;
+package com.mushroom.hui.common.cache.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.mushroom.hui.common.cache.api.CacheInterface;
 import com.mushroom.hui.common.cache.conf.CacheAddress;
 import com.mushroom.hui.common.cache.conf.CacheConf;
+import com.mushroom.hui.common.cache.exception.JedisException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisPubSub;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,8 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by yihui on 16/4/1.
  */
-public class CacheWrapper implements InitializingBean {
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CacheWrapper.class);
+public class CacheService implements InitializingBean, CacheInterface {
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CacheService.class);
 
     private JedisPool masterJedis;
     private List<JedisPool> slaveJedisList;
@@ -102,6 +105,7 @@ public class CacheWrapper implements InitializingBean {
     }
 
 
+    @Override
     public String get(String key) {
         if(StringUtils.isBlank(key)) {
             throw new IllegalArgumentException("key is null!");
@@ -131,6 +135,7 @@ public class CacheWrapper implements InitializingBean {
      * @param <T> type
      * @return object in cache!
      */
+    @Override
     public <T> T getObject(String key, Class<T> clz) {
         if(StringUtils.isBlank(key)) {
             throw new IllegalArgumentException("key is null");
@@ -159,6 +164,7 @@ public class CacheWrapper implements InitializingBean {
     }
 
 
+    @Override
     public boolean set(String key, String value, int expire) {
         if(StringUtils.isBlank(key) || StringUtils.isBlank(value) || expire <= 0) {
             throw new IllegalArgumentException("key || value || expire are illegal");
@@ -182,6 +188,7 @@ public class CacheWrapper implements InitializingBean {
     }
 
 
+    @Override
     public boolean setObject(String key, Object value, int expire) {
         if (StringUtils.isBlank(key) || value == null || expire <= 0) {
             throw new IllegalArgumentException("key value expire are illegal!");
@@ -203,6 +210,28 @@ public class CacheWrapper implements InitializingBean {
             }
         }
         return true;
+    }
+
+
+    /**
+     *
+     * @param sub
+     * @param pattern
+     */
+    public void psubscribe(JedisPubSub sub, String ...pattern) {
+        Jedis jedis = null;
+        JedisPool pool = getJedisPool(MASTER_JEDIS);
+        try{
+            jedis = pool.getResource();
+            jedis.psubscribe(sub, pattern);
+        } catch (Exception e) {
+            logger.error("psubscribe error!");
+            logger.error("Exception: {}", e);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
     }
 
 }
