@@ -19,6 +19,7 @@ public class Index {
      * @return
      */
     @RequestMapping(value = "/")
+    @ResponseBody
     public String index(HttpServletRequest request) {
         return "index";
     }
@@ -46,11 +47,5 @@ public class Index {
         modelAndView.setViewName("view");
         modelAndView.addObject("id", id);
         return modelAndView;
-    }
-
-    @RequestMapping(value = "test", produces = "text/html; charset=UTF-8")
-    @ResponseBody
-    public String test22(HttpServletRequest request) {
-        return "nihao";
     }
 }

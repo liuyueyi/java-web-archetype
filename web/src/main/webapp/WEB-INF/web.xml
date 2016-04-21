@@ -5,16 +5,6 @@
 
     <display-name>Spring MVC Application</display-name>
 
-    <!-- logback -->
-    <!--<context-param>-->
-        <!--<param-name>logbackConfigLocation</param-name>-->
-        <!--<param-value>WEB-INF/conf/logback.xml</param-value>-->
-    <!--</context-param>-->
-    <!--<listener>-->
-        <!--<listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>-->
-    <!--</listener>-->
-    <!---->
-
     <servlet>
         <servlet-name>mvc-dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

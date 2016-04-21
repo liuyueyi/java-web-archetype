@@ -39,7 +39,8 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
         String workId = (String) session.getAttribute("workId");
         if (StringUtils.isEmpty(workId)) {
             request.setAttribute("uid", "12345");
-            return false; // 若会话中没有workId，则没法愉快的玩耍下去了
+            // todo 这里如果返回false,会导致整个controller进不去,对页面的显示就是一张空白
+            return true; // 若会话中没有workId，则没法愉快的玩耍下去了
         } else {
             long userId = Long.valueOf(workId);
             request.setAttribute("uid", userId);
