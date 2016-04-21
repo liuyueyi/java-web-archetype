@@ -72,6 +72,7 @@ public class InvokeTest {
         Object obj = InvokeUtil.invoke(getAddArg());
         System.out.println(obj);
 
+        String args = getArrayArg();
         obj = InvokeUtil.invoke(getArrayArg());
         System.out.println(obj);
     }

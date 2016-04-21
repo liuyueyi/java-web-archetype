@@ -80,7 +80,6 @@
             <artifactId>servlet-api</artifactId>
             <version>${servlet-api.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.mushroom.hui.common</groupId>
             <artifactId>common</artifactId>

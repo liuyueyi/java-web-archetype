@@ -3,6 +3,7 @@ package com.mushroom.hui;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,5 +46,11 @@ public class Index {
         modelAndView.setViewName("view");
         modelAndView.addObject("id", id);
         return modelAndView;
+    }
+
+    @RequestMapping(value = "test", produces = "text/html; charset=UTF-8")
+    @ResponseBody
+    public String test22(HttpServletRequest request) {
+        return "nihao";
     }
 }
