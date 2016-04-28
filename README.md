@@ -1,6 +1,7 @@
 WebDemo
 ===
 > a java project base on Spring 
+> 一个简单spring web 工程
 
 Struct
 ===
