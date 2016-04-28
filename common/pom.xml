@@ -36,6 +36,18 @@
             <version>4.2.0.RELEASE</version>
             <scope>provided</scope>
         </dependency>
+        <!-- spring 数据库操作 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>4.2.0.RELEASE</version>
+        </dependency>
+        <!--mysql 的 driver驱动 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.25</version>
+        </dependency>
     </dependencies>
 
     <parent>
