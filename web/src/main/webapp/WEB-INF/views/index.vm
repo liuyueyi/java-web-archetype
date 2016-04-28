@@ -1,2 +1,8 @@
-#set($layout = "layouts/app.vm")
-#set($pageTitle = "欢迎查看我的首页")
+<html>
+<head>
+    首页
+</head>
+<body>
+    欢迎界面
+</body>
+</html>

@@ -1,9 +1,0 @@
-<div>
-    #if($id)
-        <label>$id</label>
-    #end
-</div>
-
-<div>
-    不错哦
-</div>

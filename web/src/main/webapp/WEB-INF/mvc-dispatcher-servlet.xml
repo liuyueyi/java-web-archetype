@@ -38,14 +38,4 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-
-    <!-- 注册拦截器，下面表示所有的Controller请求都会优先执行这个拦截器 -->
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean class="com.mushroom.hui.interceptor.UserInterceptor"></bean>
-        </mvc:interceptor>
-    </mvc:interceptors>
-
-
 </beans>
