@@ -1,0 +1,20 @@
+<div class="app-header white box-shadow">
+  <div class="navbar">
+    <div id="pageTitle" class="navbar-item pull-left h5">$!pageTitle</div>
+    <ul class="nav navbar-nav pull-right">
+      <li class="nav-item dropdown">
+        <a href="#" class="nav-link clear" data-toggle="dropdown">
+          <span class="avatar w-32">
+            $!{loginUser.nickName}<img src="/resources/img/user.png" width="32" height="32" alt="">
+            <i class="on b-white bottom"></i>
+          </span>
+        </a>
+        <div class="dropdown-menu pull-right dropdown-menu-scale">
+          <a href="#" class="dropdown-item">
+            <span>登出</span>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
