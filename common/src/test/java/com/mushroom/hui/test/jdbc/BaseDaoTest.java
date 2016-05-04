@@ -32,14 +32,14 @@ public class BaseDaoTest {
 
     @Test
     public void queryTest() {
-        String sql = "select * from TradeRate limit 1";
+        String sql = "select * from samp_db.TradeRate limit 1";
         Map<String, Object> ans = baseDao.queryMap(sql);
         LOGGER.info("The ans is : {}", ans);
     }
 
     @Test
     public void insertTest() {
-        String sql = "insert into user (username, password, address) values (\"二灰\", \"erhui\", \"woda\")";
+        String sql = "insert into samp_bd.user (username, password, address) values (\"二灰\", \"erhui\", \"woda\")";
         baseDao.execute(sql);
 
         String querySql = "select * from user limit 2";
